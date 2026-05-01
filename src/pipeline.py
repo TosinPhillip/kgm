@@ -1,11 +1,11 @@
-# src/pipeline.py - Optimized for deployment
+# src/pipeline.py - Cloud-Friendly Version with Fallback
 
 import pandas as pd
+import streamlit as st
 from src.ingestion import LogIngestion
 from src.features import FeatureEngineer
 from src.model import KnowledgeGapModel
 from src.evaluation import GapEvaluator
-import os
 
 class KnowledgeGapPipeline:
     def __init__(self):
@@ -13,19 +13,24 @@ class KnowledgeGapPipeline:
         self.engineer = FeatureEngineer()
         self.model = KnowledgeGapModel(max_depth=5)
         self.evaluator = GapEvaluator()
-        self.enhanced = None
-        self.summary = None
 
-    def run_full_pipeline(self, use_sample=True):
-        """Optimized pipeline"""
-        print("Starting optimized pipeline...")
+    @st.cache_data(show_spinner=False)
+    def run_full_pipeline(self):
+        """Cloud-safe pipeline with fallback to sample data"""
+        
+        try:
+            # Try to load full data first
+            raw_df = self.ingestor.load_oulad_vle()
+            st.success("✅ Using full AAA-2013J dataset")
+        except Exception:
+            st.warning("Full dataset not found. Using sample data for demonstration.")
+            raw_df = self.ingestor.get_sample_data()
 
-        # Load data
-        raw_df = self.ingestor.get_sample_data() if use_sample else self.ingestor.load_oulad_vle()
+        # Continue with the rest of the pipeline
         enriched = self.ingestor.enrich_with_activity_type(raw_df)
         std_df = self.ingestor.standardize_logs(enriched)
 
-        # Feature Engineering
+        # Load student info if available
         student_info = None
         try:
             student_info = pd.read_csv("data/studentInfo.csv")
@@ -36,14 +41,14 @@ class KnowledgeGapPipeline:
         except:
             pass
 
+        # Feature Engineering
         feature_df = self.engineer.build_full_feature_set(std_df, student_info)
 
-        # Train model
+        # Train Model
         self.model.train(feature_df)
 
-        # Predict and evaluate
-        self.enhanced = self.model.predict_gaps(feature_df)
-        self.enhanced, self.summary = self.evaluator.create_knowledge_gap_map(self.enhanced)
+        # Predict Gaps
+        enhanced = self.model.predict_gaps(feature_df)
+        enhanced, summary = self.evaluator.create_knowledge_gap_map(enhanced)
 
-        print("Pipeline completed successfully.")
-        return self.enhanced, self.summary
+        return enhanced, summary
