@@ -1,4 +1,4 @@
-# src/pipeline.py - Cloud-Friendly Version with Fallback
+# src/pipeline.py - Multi-module Training Version
 
 import pandas as pd
 import streamlit as st
@@ -11,43 +11,43 @@ class KnowledgeGapPipeline:
     def __init__(self):
         self.ingestor = LogIngestion()
         self.engineer = FeatureEngineer()
-        self.model = KnowledgeGapModel(max_depth=5)
+        self.model = KnowledgeGapModel(max_depth=6)   # Slightly deeper tree
         self.evaluator = GapEvaluator()
 
     @st.cache_data(show_spinner=False)
-    def run_full_pipeline(self):
-        """Cloud-safe pipeline with fallback to sample data"""
+    def run_full_pipeline(_self):
+        """Train on multiple modules for better generalization"""
+        self = _self
+        
+        modules_to_use = ['AAA', 'BBB', 'CCC']   # You can add more later
         
         try:
-            # Try to load full data first
+            # Load data from multiple modules
             raw_df = self.ingestor.load_oulad_vle()
-            st.success("✅ Using full AAA-2013J dataset")
+            # Filter to selected modules
+            raw_df = raw_df[raw_df['code_module'].isin(modules_to_use)]
+            st.success(f"✅ Using data from modules: {modules_to_use}")
         except Exception:
-            st.warning("Full dataset not found. Using sample data for demonstration.")
+            st.warning("Using sample data for demonstration.")
             raw_df = self.ingestor.get_sample_data()
 
-        # Continue with the rest of the pipeline
         enriched = self.ingestor.enrich_with_activity_type(raw_df)
         std_df = self.ingestor.standardize_logs(enriched)
 
-        # Load student info if available
+        # Load student info for selected modules
         student_info = None
         try:
             student_info = pd.read_csv("data/studentInfo.csv")
-            student_info = student_info[
-                (student_info['code_module'] == 'AAA') & 
-                (student_info['code_presentation'] == '2013J')
-            ]
+            student_info = student_info[student_info['code_module'].isin(modules_to_use)]
         except:
             pass
 
-        # Feature Engineering
         feature_df = self.engineer.build_full_feature_set(std_df, student_info)
 
-        # Train Model
+        # Train model
         self.model.train(feature_df)
 
-        # Predict Gaps
+        # Generate gaps
         enhanced = self.model.predict_gaps(feature_df)
         enhanced, summary = self.evaluator.create_knowledge_gap_map(enhanced)
 

@@ -82,7 +82,7 @@ if page == "🏠 Home":
         with st.spinner("Running full knowledge gap analysis..."):
             try:
                 pipe = KnowledgeGapPipeline()
-                enhanced, summary = pipe.run_full_pipeline(use_sample=False)
+                enhanced, summary = pipe.run_full_pipeline()
                 st.session_state.enhanced = enhanced
                 st.session_state.summary = summary
                 st.success("✅ Analysis completed successfully!")
@@ -96,7 +96,7 @@ elif page == "🚀 Run Demo":
     if st.button("Run Pipeline Now", type="primary"):
         with st.spinner("Processing..."):
             pipe = KnowledgeGapPipeline()
-            enhanced, summary = pipe.run_full_pipeline(use_sample=False)
+            enhanced, summary = pipe.run_full_pipeline()
             st.session_state.enhanced = enhanced
             st.session_state.summary = summary
             st.success("Demo completed!")
@@ -114,7 +114,7 @@ elif page == "📤 Upload Logs":
         if st.button("Process This Log File", type="primary"):
             with st.spinner("Analyzing uploaded data..."):
                 pipe = KnowledgeGapPipeline()
-                enhanced, summary = pipe.run_full_pipeline(use_sample=False)
+                enhanced, summary = pipe.run_full_pipeline()
                 st.session_state.enhanced = enhanced
                 st.session_state.summary = summary
                 st.success("✅ File processed successfully!")
