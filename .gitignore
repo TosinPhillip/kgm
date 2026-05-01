@@ -1,3 +1,20 @@
+# Large data files
+data/studentVle.csv
+data/*.csv
+*.zip
+
+# Environment
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
