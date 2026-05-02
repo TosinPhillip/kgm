@@ -21,14 +21,13 @@ class LogIngestion:
         }
     
     def load_oulad_vle(self) -> pd.DataFrame:
-        """Load OULAD studentVle.csv efficiently"""
+        """Load the full OULAD studentVle.csv without module filtering"""
         path = "data/studentVle.csv"
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
         
-        print(f"Loading OULAD studentVle.csv (large file - using efficient loading)...")
+        print("Loading full OULAD studentVle.csv (this may take a while)...")
         
-        # Load only necessary columns + filter to one course for speed
         df = pd.read_csv(
             path,
             usecols=['code_module', 'code_presentation', 'id_student', 'id_site', 'date', 'sum_click'],
@@ -36,10 +35,7 @@ class LogIngestion:
             low_memory=False
         )
         
-        # Filter to AAA-2013J (smallest & fastest for development)
-        df = df[(df['code_module'] == 'AAA') & (df['code_presentation'] == '2013J')]
-        print(f"✅ Loaded {len(df):,} interaction records from AAA-2013J")
-        
+        print(f"✅ Loaded full dataset: {len(df):,} interaction records across all modules")
         return df
     
     def enrich_with_activity_type(self, df: pd.DataFrame, vle_df: pd.DataFrame = None) -> pd.DataFrame:
