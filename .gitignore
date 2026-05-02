@@ -1,6 +1,4 @@
 # Large data files
-data/studentVle.csv
-data/*.csv
 *.zip
 
 # Environment
