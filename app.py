@@ -52,7 +52,7 @@ with st.sidebar:
         "Retrain on Full Dataset (Slow)"
     ], horizontal=True)
 
-# ====================== HOME ======================
+# HOME 
 if page == "🏠 Home":
     st.header("Welcome")
     st.write("Detect knowledge gaps from student interaction logs with explainable AI.")
@@ -65,7 +65,7 @@ if page == "🏠 Home":
 
     st.markdown("---")
 
-# ====================== RUN ANALYSIS ======================
+# RUN ANALYSIS 
 elif page == "🚀 Run Analysis":
     st.header("Run Analysis")
 
@@ -95,7 +95,7 @@ elif page == "🚀 Run Analysis":
             st.success("Analysis completed successfully!")
             st.balloons()
 
-# ====================== UPLOAD LOGS ======================
+# UPLOAD LOGS
 elif page == "📤 Upload Logs":
     st.header("Upload Custom Logs")
     uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
@@ -113,7 +113,7 @@ elif page == "📤 Upload Logs":
                 st.session_state.summary = summary
                 st.success("File processed!")
 
-# ====================== GAP OVERVIEW ======================
+# GAP OVERVIEW
 elif page == "📊 Gap Overview":
     if st.session_state.summary is None:
         st.warning("Run analysis first.")
@@ -135,7 +135,7 @@ elif page == "📊 Gap Overview":
         )
         st.plotly_chart(fig, use_container_width=True)
 
-# ====================== STUDENT DETAILS ======================
+# STUDENT DETAILS
 elif page == "🔍 Student Details":
     if st.session_state.enhanced is None:
         st.warning("Run analysis first.")
@@ -154,14 +154,14 @@ elif page == "🔍 Student Details":
             csv = data.to_csv(index=False)
             st.download_button("Download CSV", csv, f"student_{selected}.csv", "text/csv")
 
-# ====================== EVALUATION ======================
+# EVALUATION 
 elif page == "📈 Evaluation":
     st.header("Model Evaluation")
     acc = st.session_state.accuracy if st.session_state.accuracy else 0.8746
     st.success(f"**Accuracy**: {acc:.2%}")
     st.info("Decision Tree model selected for high interpretability and efficiency.")
 
-# ====================== ABOUT ======================
+# ABOUT
 elif page == "ℹ️ About":
     st.header("About the Project")
     st.write("Final year project demonstrating a lightweight explainable knowledge-gap mapping system.")

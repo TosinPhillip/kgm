@@ -69,3 +69,4 @@ class KnowledgeGapModel:
             return True
         print(f"Model file not found at {path}")
         return False
+        

@@ -4,9 +4,9 @@
 
 knowledge-gap-mapper/
 
-├── data/                    # ← put OULAD files here
+├── data/                    # OULAD files go here
 
-├── src/                     # pipeline modules (I write these)
+├── src/                     # pipeline modules script
 
 │   ├── ingestion.py
 
@@ -16,7 +16,7 @@ knowledge-gap-mapper/
 
 │   └── visualization.py
 
-├── notebooks/               # quick testing (optional)
+├── notebooks/               # for quick testing 
 
 ├── app.py                   # final Streamlit dashboard
 
@@ -26,7 +26,7 @@ knowledge-gap-mapper/
 
 ├── sample\_input\_template.csv   # for users
 
-└── docs/                    # final documentation (I write this)		
+└── docs/                    # final documentation	
 
 
 
